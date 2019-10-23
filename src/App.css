@@ -1,0 +1,26 @@
+.App {
+  text-align: center;
+ 
+}
+
+.App-logo {
+  height: 35vmin;
+}
+
+
+.App-link {
+  color: #61dafb;
+}
+
+.Home-ico{
+    width: 40px;
+    height: 40px;
+}
+
+.inactivo{
+  opacity: 0.5;
+}
+
+.browse-logo{
+  height: 25vmin;
+}
