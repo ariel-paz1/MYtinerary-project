@@ -17,3 +17,7 @@ code {
 #root{
   height: 100vh;
 }
+
+footer{
+  z-index: -1;
+}
