@@ -1,5 +1,11 @@
 import React from 'react';
 import './nav-style.css';
+import {
+  BrowserRouter,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
 
 class SideNavPage extends React.Component {
@@ -48,7 +54,7 @@ class SideNavPage extends React.Component {
     return (
       <React.Fragment>
         <span class="user-side">
-        <img src={process.env.PUBLIC_URL + '/img/user.png'} className="user-img" alt="logo" />
+          <img src={process.env.PUBLIC_URL + '/img/user.png'} className="user-img" alt="logo" />
         </span>
         <span onClick={this.openNavClick} class="open-nav">
           &#9776;
@@ -62,15 +68,21 @@ class SideNavPage extends React.Component {
           <a href="#" onClick={this.closeNavClick} class="close-nav">
             &times;
           </a>
-          <a href="#">About</a>
-          <a href="#">Services</a>
-          <a href="#">Clients</a>
-          <a href="#">Contact</a>
+          
+            <div>
+              <a><Link to="/">Home</Link></a>
+              <a><Link to="/Create">Create</Link></a>
+              <a><Link to="/Login">Login</Link></a>
+              <hr />
+            </div>
+          
         </div>
       </React.Fragment>
     )
   }
 }
+
+
 
 export default SideNavPage;
 
@@ -146,7 +158,7 @@ class SideNavPage extends React.Component {
                 <MDBSideNavLink>For bloggers</MDBSideNavLink>
                 <MDBSideNavLink>For authors</MDBSideNavLink>
               </MDBSideNavCat>
-              <MDBSideNavCat name="About" id="about" icon="eye">
+              <MDBSideNavCat name="Create" id="Create" icon="eye">
                 <MDBSideNavLink>Instruction</MDBSideNavLink>
                 <MDBSideNavLink>Monthly meetings</MDBSideNavLink>
               </MDBSideNavCat>

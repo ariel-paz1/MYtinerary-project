@@ -13,7 +13,7 @@
     width: 0;  /* to be set in js */
     position: fixed;
     overflow-x: hidden;
-    z-index: var(--sidenav-z-index);
+    z-index: 2;
     top: 0;
     left: 150px; /*rancio*/
     background: #111;
