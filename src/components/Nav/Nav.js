@@ -3,7 +3,7 @@ import './nav-style.css';
 import {
   Link
 } from "react-router-dom";
-
+//una prueba
 
 class SideNavPage extends React.Component {
   state = {
