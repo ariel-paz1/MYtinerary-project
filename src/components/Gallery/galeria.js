@@ -59,7 +59,7 @@ class CarouselPage extends Component {
 }
 
 export default CarouselPage;
-
+/*
 class Gallery extends React.Component {
     render() {
         return (
@@ -170,4 +170,4 @@ class Gallery extends React.Component {
         )
     }
 }
-//export default Gallery;
+export default Gallery;*/

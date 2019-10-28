@@ -1,3 +1,4 @@
+/*
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
@@ -28,4 +29,4 @@ describe('<Foo />', () => {
     expect(Foo.prototype.componentDidMount).to.have.property('callCount', 1);
     Foo.prototype.componentDidMount.restore();
   });
-});
+});*/

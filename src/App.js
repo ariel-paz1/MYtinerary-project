@@ -58,13 +58,13 @@ function App() {
 function Home() {
   return (
     <footer className="mt-auto">
-      <div className="pb-5">
+      <div className="IrCiudades">
         <p>Find your perfect trip, designed by insiders who know
         and love their cities
         </p>
-        <a>
+        
         <Link to="/Cities"><img src={process.env.PUBLIC_URL + '/img/circled-right-2.png'} className="browse-logo" alt="logo" /></Link>
-        </a>
+        
       </div>
       <p className="text-left">
         Popular MYtineraries
