@@ -83,7 +83,7 @@ app.post('/city', (req,res)=>{
   })
 })
 
-app.put('/city', (req,res)=>{
+app.put('/city/:cityId', (req,res)=>{
   let cityId = req.params.cityId;
   let update = req.body;
   
@@ -94,7 +94,7 @@ app.put('/city', (req,res)=>{
   })
 })
 
-app.delete('/city', (req,res)=>{
+app.delete('/city/:cityId', (req,res)=>{
   let cityId = req.params.cityId;
 
   cities.findById(cityId, (err, city)=>{
