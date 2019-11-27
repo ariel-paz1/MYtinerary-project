@@ -6,14 +6,15 @@ const bodyParser= require('body-parser')
 const app = express();
 const port = process.env.PORT || 5000;
 const cities = require('./model/city')
+const itinerario = require('./model/itinerary')
 const mongoose = require('mongoose');
-
+const cors = require('cors');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-
+app.use(cors());
 //MongoClient.connect('mongodb+srv://userDesa:userDesa123@mlabcluster-wfri4.mongodb.net/ProjectMern?retryWrites=true&w=majority', { useUnifiedTopology: true }, (err, db) => {
-mongoose.connect('mongodb+srv://userDesa:userDesa123@mlabcluster-wfri4.mongodb.net/ProjectMern?retryWrites=true&w=majority', { useUnifiedTopology: true }, (err, db) => {  
+mongoose.connect('mongodb+srv://userDesa:userDesa123@mlabcluster-wfri4.mongodb.net/ProjectMern?retryWrites=true&w=majority', { useUnifiedTopology: true, useNewUrlParser: true}, (err, db) => {  
   if (err) return console.log(err)
 
   console.log("conectado a la DB");
@@ -22,6 +23,7 @@ mongoose.connect('mongodb+srv://userDesa:userDesa123@mlabcluster-wfri4.mongodb.n
 
 app.listen(port, () => {
   console.log("Conectado a " + port);
+  
 });
 
 app.get('/city', async (req, res) => {
@@ -38,23 +40,29 @@ app.get('/city', async (req, res) => {
   // res.send({ express: 'Hello From Express' });
 });
 
-/*
-app.get('/city', (req,res)=>{
-  console.log(req.body);
-  res.status(200).send({ 
-    
-    
-    cities
-   })
-  
-  cities.find({}, (err,cities)=>{
-    if (err) return res.status(500).send({message: 'Error al realizar peticion'});
-    if(!cities) return res.status(404).send({message: 'El producto no existe'});
-  
-    res.send(200, { cities });
-  })
-  
-}) */
+app.get('/itinerario', async (req, res) => {
+
+  if(res.status(200)){
+    itinerario.find( {}).then( data => {
+        console.log(data);
+          res.json(data);
+      }).catch( err =>  {console.log(err);});
+  }
+
+ 
+
+  // res.send({ express: 'Hello From Express' });
+});
+
+app.get('/:name',	(req, res) => {
+  		let cityRequested = req.params.name;
+  		itinerario.findOne({ name: cityRequested })
+			.then(city => {
+        res.send(city);
+        if(!city) return res.status(404).send({message: 'El producto no existe'})
+			})
+			.catch(err => console.log(err));
+});
 
 app.get('/city/:cityId', (req,res)=>{
   let cityId = req.params.cityId
@@ -73,8 +81,11 @@ app.post('/city', (req,res)=>{
   console.log(req.body);
 
   let ciudad = new cities()
-  ciudad.name = req.body.name;
-  ciudad.country = req.body.country;
+  ciudad.title = req.body.title;
+  ciudad.profilePic = req.body.profilePic;
+  ciudad.rating = req.body.rating;
+  ciudad.price = req.body.price;
+  ciudad.hashtag = req.body.hashtag;
 
   ciudad.save((err, guardado)=>{
     if (err) res.status(500).send({message: 'Error al guardar'})

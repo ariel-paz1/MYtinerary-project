@@ -1,53 +1,74 @@
-import React from 'react'
-
+import React from "react";
+import { connect } from "react-redux";
+import { getItems } from "../actions/itemActions";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 class Ciudades extends React.Component {
+  /*
+componentDidMount() {
+  // calling the new action creator
+  this.props.getItems();
+}
+*/
 
-  state = {
-    cities: [],
-    id: 0,
-    intervalIsSet: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      products: [],
+      search: ""
+    };
+  }
 
   componentDidMount() {
-    this.getDataFromDb();
-    if (!this.state.intervalIsSet) {
-      let interval = setInterval(this.getDataFromDb, 1000);
-      this.setState({ intervalIsSet: interval });
-    }
-  }
-  componentWillUnmount() {
-    if (this.state.intervalIsSet) {
-      clearInterval(this.state.intervalIsSet);
-      this.setState({ intervalIsSet: null });
-    }
+    console.log("this");
+    console.log(this);
+    fetch("http://localhost:5000/city")
+      .then(res => {
+        return res.json();
+      })
+      .then(data => {
+        this.setState({
+          products: data
+        });
+      });
   }
 
-  getDataFromDb = () => {
-    fetch('/city')
-      .then(res => res.json())
-      .then(cities => this.setState({ cities }));
-  };
+  updateSearch(event) {
+    this.setState({
+      search: event.target.value.substr(0, 20)
+    });
+  }
 
   render() {
+    let filtered = this.state.products.filter(ciudades => {
+      return ciudades.name.indexOf(this.state.search) !== -1;
+    });
     return (
       <React.Fragment>
         <h1>Ciudades</h1>
+        <form>
+          <label htmlFor="filter">Buscar: </label>
+          <input
+            type="text"
+            id="filter"
+            value={this.state.search}
+            onChange={this.updateSearch.bind(this)}
+          />
+        </form>
         <table className="table">
           <thead>
             <tr>
-              <th scope="col">ID</th>
               <th scope="col">Nombre</th>
               <th scope="col">Pais</th>
             </tr>
           </thead>
           <tbody>
-            { this.state.cities.map((dat) => (
+            {filtered.map(dat => (
               <tr key={dat.name}>
-                <td>{dat._id}</td>
-                <td>{dat.name}</td>
+                <td><Link to={`Itinerary/${dat.name}`}>{dat.name}</Link></td>
                 <td>{dat.country}</td>
               </tr>
-              ))}
+            ))}
           </tbody>
         </table>
       </React.Fragment>
@@ -55,8 +76,18 @@ class Ciudades extends React.Component {
   }
 }
 
+Ciudades.propTypes = {
+  getItems: PropTypes.func.isRequired,
+  item: PropTypes.object.isRequired
+};
 
-export default Ciudades
+const mapStateToProps = state => {
+  console.log(state);
+  return {
+    item: state.item
+  };
+};
+export default connect(mapStateToProps, { getItems })(Ciudades);
 
 /*
 codigo funcionando
@@ -81,22 +112,4 @@ codigo funcionando
             <NumberList numbers={numbers} />
           </tbody>
 
-esto no funciona 
-
-function NumberList(props) {
-  const ciudades = props.ciudades;
-  const listItems = ciudades.map((ciudad) =>
-    <ListItem key={ciudad}
-      value={ciudad} />
-  );
-  return (
-    <ul>
-      {listItems}
-    </ul>
-  );
-}
-
-function ListItem(props) {
-  return <tr><td>{props.name}</td></tr>;
-}
 */

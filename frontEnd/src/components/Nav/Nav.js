@@ -70,6 +70,7 @@ class SideNavPage extends React.Component {
               <Link to="/">Home</Link>
               <Link to="/Create">Create</Link>
               <Link to="/Login">Login</Link>
+              <Link to="/Itinerary">It</Link>
               <hr />
             </div>
           

@@ -12,6 +12,7 @@ import {
 import NewUser from './components/CreateUser';
 import Users from './components/Login';
 import Ciudades from './components/Cities';
+import Itinerario from './components/Itinerary';
 /*
 import $ from 'jquery';
 window.jQuery = $;
@@ -23,6 +24,7 @@ console.log(bootstrap)
 */
 
 function App() {
+  
   return (
     <div className="App cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
       <BrowserRouter>
@@ -49,6 +51,9 @@ function App() {
             <Login />
           </Route>
         </Switch>
+        <Route path="/Itinerary">
+            <Itineraries />
+          </Route>
       </BrowserRouter>
     </div>
 
@@ -93,10 +98,24 @@ function Login() {
 }
 
 function Cities() {
+
   return (
+    
     <React.Fragment>
     <Ciudades />
     </React.Fragment>
+    
+  );
+}
+
+function Itineraries() {
+
+  return (
+    
+    <React.Fragment>
+    <Itinerario />
+    </React.Fragment>
+    
   );
 }
 
