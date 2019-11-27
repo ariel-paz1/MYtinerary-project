@@ -67,10 +67,10 @@ class SideNavPage extends React.Component {
           </a>
           
             <div>
-              <Link to="/">Home</Link>
-              <Link to="/Create">Create</Link>
-              <Link to="/Login">Login</Link>
-              <Link to="/Itinerary">It</Link>
+              <Link to="/" onClick={this.closeNav} >Home</Link>
+              <Link to="/Create" onClick={this.closeNav}>Create</Link>
+              <Link to="/Login" onClick={this.closeNav}>Login</Link>
+              <Link to="/Itinerary" onClick={this.closeNav}>It</Link>
               <hr />
             </div>
           
