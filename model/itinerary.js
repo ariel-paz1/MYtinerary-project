@@ -13,8 +13,9 @@ var ItinerarySchema = new mongoose.Schema({
     price:{
         type: Number
     },
-    name:{
-        type: String
+    citi_id:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'cities'
     },
     hashtag:{
         type: Array

@@ -51,7 +51,7 @@ class SideNavPage extends React.Component {
     return (
       <React.Fragment>
         <span className="user-side">
-          <img src={process.env.PUBLIC_URL + '/img/user.png'} className="user-img" alt="logo" />
+          <img src={process.env.PUBLIC_URL + '/img/userPred.png'} className="user-img" alt="logo" />
         </span>
         <span onClick={this.openNavClick} className="open-nav">
           &#9776;

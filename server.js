@@ -6,6 +6,7 @@ const bodyParser= require('body-parser')
 const app = express();
 const port = process.env.PORT || 5000;
 const cities = require('./model/city')
+const user = require('./model/user')
 const itinerario = require('./model/itinerary')
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -26,20 +27,7 @@ app.listen(port, () => {
   
 });
 
-app.get('/city', async (req, res) => {
-
-  if(res.status(200)){
-      cities.find( {}).then( data => {
-        console.log(data);
-          res.json(data);
-      }).catch( err =>  {console.log(err);});
-  }
-
- 
-
-  // res.send({ express: 'Hello From Express' });
-});
-
+/** Itinerario */
 app.get('/itinerario', async (req, res) => {
 
   if(res.status(200)){
@@ -48,20 +36,35 @@ app.get('/itinerario', async (req, res) => {
           res.json(data);
       }).catch( err =>  {console.log(err);});
   }
-
- 
-
   // res.send({ express: 'Hello From Express' });
 });
 
-app.get('/:name',	(req, res) => {
-  		let cityRequested = req.params.name;
-  		itinerario.findOne({ name: cityRequested })
-			.then(city => {
-        res.send(city);
-        if(!city) return res.status(404).send({message: 'El producto no existe'})
-			})
-			.catch(err => console.log(err));
+
+
+app.get('/itinerario/:id',	(req, res) => {
+      let cityRequested = req.params.id;
+      
+        itinerario.findOne({ citi_id: cityRequested })
+        .populate('citi_id')
+        .then(itin => {
+          res.send(itin);
+          if(!itin) return res.status(404).send({message: 'El itinerario no existe'})
+        })
+        .catch(err => console.log(err));
+      
+});
+
+/** Ciudades */
+
+app.get('/city', async (req, res) => {
+
+  if(res.status(200)){
+      cities.find( {}).then( data => {
+        console.log(data);
+          res.json(data);
+      }).catch( err =>  {console.log(err);});
+  }
+  // res.send({ express: 'Hello From Express' });
 });
 
 app.get('/city/:cityId', (req,res)=>{
@@ -81,11 +84,8 @@ app.post('/city', (req,res)=>{
   console.log(req.body);
 
   let ciudad = new cities()
-  ciudad.title = req.body.title;
-  ciudad.profilePic = req.body.profilePic;
-  ciudad.rating = req.body.rating;
-  ciudad.price = req.body.price;
-  ciudad.hashtag = req.body.hashtag;
+  ciudad.name = req.body.name;
+  ciudad.country = req.body.country;
 
   ciudad.save((err, guardado)=>{
     if (err) res.status(500).send({message: 'Error al guardar'})
@@ -118,21 +118,39 @@ app.delete('/city/:cityId', (req,res)=>{
   })
 })
 
+/** Usuarios */
+app.get('/usuarios', async (req, res) => {
 
-/*
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+  if(res.status(200)){
+    user.find( {}).then( data => {
+        console.log(data);
+          res.json(data);
+      }).catch( err =>  {console.log(err);});
+  }
 
-app.get('/api/hello', (req, res) => {
-  res.send({ express: 'Hello From Express' });
+ 
+
+  // res.send({ express: 'Hello From Express' });
 });
 
-app.post('/api/world', (req, res) => {
+
+app.post('/usuarios', (req,res)=>{
+  console.log('POST /user');
   console.log(req.body);
-  res.send(
-    `I received your POST request. This is what you sent me: ${req.body.post}`,
-  );
-});
-
-app.listen(port, () => console.log(`Listening on port ${port}`));
-*/
+  let userName = req.body.userName;
+  let usuario = new user()
+  usuario.userName = req.body.userName;
+  usuario.password = req.body.password;
+  usuario.email = req.body.email;
+  usuario.name = req.body.name;
+  usuario.country = req.body.country;
+  user.findById(userName, (err,user)=>{
+    if (err) res.status(500).send({message: 'Usuario Existente'})
+    else{
+      usuario.save((err, guardado)=>{
+        if (err) res.status(500).send({message: 'Error al guardar'})
+        res.status(200).send({usuario: guardado})
+      })
+    }
+  })
+})

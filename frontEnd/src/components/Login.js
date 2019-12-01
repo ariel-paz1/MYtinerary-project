@@ -14,7 +14,7 @@ class Users extends React.Component {
               <input type="submit" className="fadeIn fourth" value="Log In"></input>
             </form>
             <div id="formFooter">
-              <a className="underlineHover" href="#">Nuevo Usuario?</a>
+              <a className="underlineHover" href="google.com">Nuevo Usuario?</a>
             </div>
           </div>
         </div>

@@ -4,12 +4,6 @@ import { getItems } from "../actions/itemActions";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 class Ciudades extends React.Component {
-  /*
-componentDidMount() {
-  // calling the new action creator
-  this.props.getItems();
-}
-*/
 
   constructor(props) {
     super(props);
@@ -20,17 +14,7 @@ componentDidMount() {
   }
 
   componentDidMount() {
-    console.log("this");
-    console.log(this);
-    fetch("http://localhost:5000/city")
-      .then(res => {
-        return res.json();
-      })
-      .then(data => {
-        this.setState({
-          products: data
-        });
-      });
+    this.props.getItems();
   }
 
   updateSearch(event) {
@@ -40,7 +24,9 @@ componentDidMount() {
   }
 
   render() {
-    let filtered = this.state.products.filter(ciudades => {
+    //console.log(this.props.item.items)
+    
+    let filtered = this.props.item.items.filter(ciudades => {
       return ciudades.name.indexOf(this.state.search) !== -1;
     });
     return (
@@ -65,7 +51,7 @@ componentDidMount() {
           <tbody>
             {filtered.map(dat => (
               <tr key={dat.name}>
-                <td><Link to={`Itinerary/${dat.name}`}>{dat.name}</Link></td>
+                <td><Link to={`Itinerary/${dat._id}`}>{dat.name}</Link></td>
                 <td>{dat.country}</td>
               </tr>
             ))}
@@ -82,7 +68,6 @@ Ciudades.propTypes = {
 };
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
     item: state.item
   };
