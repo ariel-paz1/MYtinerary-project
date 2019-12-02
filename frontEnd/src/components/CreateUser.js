@@ -25,7 +25,7 @@ class NewUser extends React.Component {
     const fd = new FormData();
     fd.append("image", this.state.image, this.state.image.name);
     axios
-      .post("", fd, {
+      .post("http://localhost:5000/usuarios", fd, {
         onUploadProgress: progressEvent => {
           console.log(
             "Upload: " +
@@ -37,6 +37,9 @@ class NewUser extends React.Component {
         console.log(res);
       });
   };
+
+
+
   /*  Actualizacion de state  */
   handleEmailChange = evt => {
     this.setState({ email: evt.target.value });

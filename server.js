@@ -7,13 +7,15 @@ const app = express();
 const port = process.env.PORT || 5000;
 const cities = require('./model/city')
 const user = require('./model/user')
+const actividades = require('./model/activity')
 const itinerario = require('./model/itinerary')
 const mongoose = require('mongoose');
 const cors = require('cors');
-
+var router = express.Router();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true})); 
 app.use(cors());
+app.use(router);
 //MongoClient.connect('mongodb+srv://userDesa:userDesa123@mlabcluster-wfri4.mongodb.net/ProjectMern?retryWrites=true&w=majority', { useUnifiedTopology: true }, (err, db) => {
 mongoose.connect('mongodb+srv://userDesa:userDesa123@mlabcluster-wfri4.mongodb.net/ProjectMern?retryWrites=true&w=majority', { useUnifiedTopology: true, useNewUrlParser: true}, (err, db) => {  
   if (err) return console.log(err)
@@ -75,8 +77,6 @@ app.get('/city/:cityId', (req,res)=>{
 }) 
 
 app.post('/city', (req,res)=>{
-  console.log('POST /city');
-  console.log(req.body);
 
   let ciudad = new cities()
   ciudad.name = req.body.name;
@@ -123,6 +123,23 @@ app.delete('/city/:cityId', (req,res)=>{
     })
   })
 })
+
+/** Actividades */
+app.get('/actividades', async (req, res) => {
+
+  if(res.status(200)){
+    actividades.find( {}).then( data => {
+        console.log(data);
+          res.json(data);
+      }).catch( err =>  {console.log(err);});
+  }
+
+ 
+
+  // res.send({ express: 'Hello From Express' });
+});
+
+
 
 /** Usuarios */
 app.get('/usuarios', async (req, res) => {

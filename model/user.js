@@ -15,6 +15,9 @@ var UserSchema = new mongoose.Schema({
     },
     country:{
         type: String
+    },
+    image:{
+        type: String
     }
 });
 
