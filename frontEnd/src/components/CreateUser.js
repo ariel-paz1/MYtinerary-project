@@ -75,7 +75,7 @@ class NewUser extends React.Component {
     return (
       <React.Fragment>
         <h1>Nuevo Usuario</h1>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} action="/usuarios">
           <input
             style={{ display: "none" }}
             type="file"

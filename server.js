@@ -12,19 +12,16 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true})); 
 app.use(cors());
 //MongoClient.connect('mongodb+srv://userDesa:userDesa123@mlabcluster-wfri4.mongodb.net/ProjectMern?retryWrites=true&w=majority', { useUnifiedTopology: true }, (err, db) => {
 mongoose.connect('mongodb+srv://userDesa:userDesa123@mlabcluster-wfri4.mongodb.net/ProjectMern?retryWrites=true&w=majority', { useUnifiedTopology: true, useNewUrlParser: true}, (err, db) => {  
   if (err) return console.log(err)
-
   console.log("conectado a la DB");
-
 });
 
 app.listen(port, () => {
   console.log("Conectado a " + port);
-  
 });
 
 /** Itinerario */
@@ -40,10 +37,8 @@ app.get('/itinerario', async (req, res) => {
 });
 
 
-
 app.get('/itinerario/:id',	(req, res) => {
       let cityRequested = req.params.id;
-      
         itinerario.findOne({ citi_id: cityRequested })
         .populate('citi_id')
         .then(itin => {
@@ -86,12 +81,23 @@ app.post('/city', (req,res)=>{
   let ciudad = new cities()
   ciudad.name = req.body.name;
   ciudad.country = req.body.country;
-
+  console.log('POST /city');
+  console.log(req.body);
+  console.log('test');
+  res.end(); // end the response
+  // ciudad.save()
+  // .then(city => {
+  //   res.send(city)
+  //   })
+  //   .catch(err => {
+  //   res.status(500).send("Server error")}) 
+/*
   ciudad.save((err, guardado)=>{
     if (err) res.status(500).send({message: 'Error al guardar'})
     
     res.status(200).send({ciudad: guardado})
   })
+*/
 })
 
 app.put('/city/:cityId', (req,res)=>{
@@ -135,16 +141,16 @@ app.get('/usuarios', async (req, res) => {
 
 
 app.post('/usuarios', (req,res)=>{
-  console.log('POST /user');
+  console.log('POST /usuarios');
   console.log(req.body);
-  let userName = req.body.userName;
+  //let userName = req.body.userName;
   let usuario = new user()
   usuario.userName = req.body.userName;
   usuario.password = req.body.password;
   usuario.email = req.body.email;
   usuario.name = req.body.name;
   usuario.country = req.body.country;
-  user.findById(userName, (err,user)=>{
+  user.findById(usuario.userName, (err,user)=>{
     if (err) res.status(500).send({message: 'Usuario Existente'})
     else{
       usuario.save((err, guardado)=>{
