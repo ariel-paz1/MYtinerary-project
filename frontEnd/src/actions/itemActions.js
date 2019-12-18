@@ -5,7 +5,7 @@ import { tokenConfig } from './authActions';
 export const getItems = () => dispatch => {
   dispatch(setItemsLoading());
   axios
-    .get('http://localhost:5000/city')
+    .get('http://localhost:5000/city/all')
     .then(res =>{
       dispatch({
         type: GET_ITEMS,

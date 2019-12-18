@@ -4,9 +4,6 @@ var ItinerarySchema = new mongoose.Schema({
     title:{
         type: String
     },
-    profilePic:{
-        type: String
-    },
     rating:{
         type : Number
     },
@@ -17,10 +14,15 @@ var ItinerarySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'cities'
     },
+    profilePic:{
+        type: String
+    },
+    userName:{
+        type: String
+    },
     hashtag:{
         type: Array
-    }
-});
+    }},{ versionKey: '_somethingElse' });
 
 module.exports = mongoose.model("itineraries", ItinerarySchema);
 

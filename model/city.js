@@ -7,6 +7,6 @@ var CourseSchema = new mongoose.Schema({
     country:{
         type: String
     }
-});
+},{ versionKey: '_somethingElse' });
 
 module.exports = mongoose.model("cities", CourseSchema)

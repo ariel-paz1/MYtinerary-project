@@ -14,7 +14,7 @@ class Activity extends React.Component {
 
   componentDidMount() {
     
-    fetch(`http://localhost:5000/actividades`)
+    fetch(`http://localhost:5000/actividades/all`)
       .then(res => {
         return res.json();
       })

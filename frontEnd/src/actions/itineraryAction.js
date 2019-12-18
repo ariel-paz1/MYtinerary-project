@@ -2,10 +2,10 @@ import axios from 'axios';
 import { GET_ITINERARY, ITINERARY_LOADING, ADD_ITINERARY, DELETE_ITINERARY} from './types';
 import { returnErrors } from './errorActions';
 import { tokenConfig } from './authActions';
-export const getItinerary = () => dispatch => {
+export const getItinerary = name => dispatch => {
     dispatch(setItemsLoading());
     axios
-      .get('http://localhost:5000/itinerario')
+      .get(`http://localhost:5000/itinerario/${name}`)
       .then(res =>
         dispatch({
           type: GET_ITINERARY,

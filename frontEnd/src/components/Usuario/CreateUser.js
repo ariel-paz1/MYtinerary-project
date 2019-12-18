@@ -1,11 +1,14 @@
 import React from "react";
-import axios from "axios";
-
+//import axios from "axios";
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { register } from '../../actions/authActions';
+import { clearErrors } from '../../actions/errorActions';
 class NewUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "",
+      userName: "",
       password: "",
       email: "",
       name: "",
@@ -14,6 +17,36 @@ class NewUser extends React.Component {
       checked: false
     };
   }
+
+  static propTypes = {
+    isAuthenticated: PropTypes.bool,
+    error: PropTypes.object.isRequired,
+    register: PropTypes.func.isRequired,
+    clearErrors: PropTypes.func.isRequired
+  };
+  componentDidUpdate(prevProps) {
+    const { error, isAuthenticated } = this.props;
+    if (error !== prevProps.error) {
+      // Check for register error
+      if (error.id === 'REGISTER_FAIL') {
+        this.setState({ msg: error.msg.msg });
+      } else {
+        this.setState({ msg: null });
+      }
+    }
+
+    // If authenticated, close modal
+    if (this.state.modal) {
+      if (isAuthenticated) {
+        this.toggle();
+      }
+    }
+
+    if(this.props.isAuthenticated) {
+      this.props.history.push('/');
+   }
+  }
+
   /* Archivos */
   fileSelectedHandler = event => {
     this.setState({
@@ -21,41 +54,21 @@ class NewUser extends React.Component {
     });
   };
 
-  fileUploadHandler = () => {
-    const fd = new FormData();
-    fd.append("image", this.state.image, this.state.image.name);
-    axios
-      .post("http://localhost:5000/usuarios", fd, {
-        onUploadProgress: progressEvent => {
-          console.log(
-            "Upload: " +
-              Math.round((progressEvent.loaded / progressEvent.total) * 100)
-          );
-        }
-      })
-      .then(res => {
-        console.log(res);
-      });
+  fileUploadHandler = (e) => {
+    e.preventDefault();
+    //const fd = new FormData();
+    const usuario = this.state;
+    usuario.image = "imagen_test";
+    // fd.append("image", this.state.image, this.state.image.name);
+    this.props.register(usuario);
   };
-
-
 
   /*  Actualizacion de state  */
-  handleEmailChange = evt => {
-    this.setState({ email: evt.target.value });
-  };
-
-  handlePasswordChange = evt => {
-    this.setState({ password: evt.target.value });
-  };
-
-  handleUserNameChange = evt => {
-    this.setState({ username: evt.target.value });
-  };
-
-  handleNameChange = evt => {
-    this.setState({ name: evt.target.value });
-  };
+  handleChange(e) {
+    let change = {}
+    change[e.target.name] = e.target.value      
+    this.setState(change)
+  }
 
   handleCheckChange = evt => {
     this.setState({ checked: evt.target.checked });
@@ -63,11 +76,12 @@ class NewUser extends React.Component {
 
   /* Validacion */
   canBeSubmitted() {
-    const { email, password, username, name, checked } = this.state;
+    
+    const { email, password, userName, name, checked } = this.state;
     return (
       email.length > 0 &&
       password.length > 0 &&
-      username.length > 0 &&
+      userName.length > 0 &&
       name.length > 0 &&
       checked === true
     );
@@ -78,12 +92,13 @@ class NewUser extends React.Component {
     return (
       <React.Fragment>
         <h1>Nuevo Usuario</h1>
-        <form onSubmit={this.handleSubmit} action="/usuarios">
+        <form method="POST">
           <input
             style={{ display: "none" }}
             type="file"
             onChange={this.fileSelectedHandler}
-            ref={fileInput => (this.fileInput = fileInput)}
+            ref={ fileInput => (this.fileInput = fileInput)}
+            name="image"
           ></input>
           <img
             src={process.env.PUBLIC_URL + "/img/userPred.png"}
@@ -92,21 +107,21 @@ class NewUser extends React.Component {
           />
           <input
             type="text"
-            id="login"
+            id="userName"
             className="fadeIn second"
-            name="login"
+            name="userName"
             placeholder="Usuario"
-            value={this.state.username}
-            onChange={this.handleUserNameChange}
+            value={this.state.userName}
+            onChange={this.handleChange.bind(this)}
           ></input>
           <input
-            type="text"
+            type="password"
             id="password"
             className="fadeIn third"
-            name="login"
+            name="password"
             placeholder="Contraseña"
             value={this.state.password}
-            onChange={this.handlePasswordChange}
+            onChange={this.handleChange.bind(this)}
           ></input>
           <input
             type="text"
@@ -115,7 +130,7 @@ class NewUser extends React.Component {
             name="email"
             placeholder="Email"
             value={this.state.email}
-            onChange={this.handleEmailChange}
+            onChange={this.handleChange.bind(this)}
           ></input>
           <input
             type="text"
@@ -124,11 +139,16 @@ class NewUser extends React.Component {
             name="name"
             placeholder="Name"
             value={this.state.name}
-            onChange={this.handleNameChange}
+            onChange={this.handleChange.bind(this)}
           ></input>
           <label>
             Nacionalidad:
-            <select value={this.state.value} onChange={this.handleChange}>
+            <select
+              name="country"
+              value={this.state.value}
+              onChange={this.handleChange.bind(this)}
+            >
+              <option value="England">Elegir Pais</option>
               <option value="England">England</option>
               <option value="France">France</option>
               <option value="Germany">Germany</option>
@@ -139,13 +159,14 @@ class NewUser extends React.Component {
           <input
             type="checkbox"
             id="byc"
+            name="checked"
             value={this.state.checked}
             onChange={this.handleCheckChange}
           ></input>
           Acepto Bases y Condiciones
           <br></br>
           <button
-            type="submit"
+            type="button" className="btn btn-outline-success"
             id="submit_button"
             onClick={this.fileUploadHandler}
             disabled={!isEnabled}
@@ -157,4 +178,12 @@ class NewUser extends React.Component {
     );
   }
 }
-export default NewUser;
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.error
+});
+
+export default connect(
+  mapStateToProps,
+  { register, clearErrors }
+)(NewUser);

@@ -4,7 +4,6 @@ import { getItems } from "../actions/itemActions";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 class Ciudades extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -24,11 +23,11 @@ class Ciudades extends React.Component {
   }
 
   render() {
-    //console.log(this.props.item.items)
-    
     let filtered = this.props.item.items.filter(ciudades => {
       return ciudades.name.indexOf(this.state.search) !== -1;
     });
+
+
     return (
       <React.Fragment>
         <h1>Ciudades</h1>

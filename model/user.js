@@ -18,8 +18,11 @@ var UserSchema = new mongoose.Schema({
     },
     image:{
         type: String
+    },
+    favorites:{
+        type: Array
     }
-});
+    },{ versionKey: '_somethingElse' });
 
 module.exports = mongoose.model("users", UserSchema);
 

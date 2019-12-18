@@ -4,7 +4,14 @@ import CarouselPage from "./Gallery/galeria";
 class Home extends React.Component {
   render() {
     return (
-      <footer className="mt-auto">
+      <header className="mb-auto">
+        <Link to="/">
+          <img
+            src={process.env.PUBLIC_URL + "/img/MYtineraryLogo.png"}
+            className="App-logo"
+            alt="logo"
+          />
+        </Link>
         <div className="IrCiudades">
           <p>
             Find your perfect trip, designed by insiders who know and love their
@@ -23,7 +30,7 @@ class Home extends React.Component {
         <React.Fragment>
           <CarouselPage />
         </React.Fragment>
-      </footer>
+      </header>
     );
   }
 }

@@ -18,7 +18,7 @@ export const loadUser = () => (dispatch, getState) => {
   dispatch({ type: USER_LOADING });
 
   axios
-    .get('/auth/user', tokenConfig(getState))
+    .get('http://localhost:5000/login/user', tokenConfig(getState))
     .then(res =>
       dispatch({
         type: USER_LOADED,
@@ -34,37 +34,54 @@ export const loadUser = () => (dispatch, getState) => {
 };
 
 // Register User
-export const register = ({ name, email, password }) => dispatch => {
-  // Headers
-  const config = {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
+export const register = ({ userName,
+  password,
+  email,
+  name,
+  country,
+  image }) => dispatch => {
+    // Headers
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
 
-  // Request body
-  const body = JSON.stringify({ name, email, password });
-
-  axios
-    .post('/users', body, config)
-    .then(res =>
-      dispatch({
-        type: REGISTER_SUCCESS,
-        payload: res.data
-      })
-    )
-    .catch(err => {
-      dispatch(
-        returnErrors(err.response.data, err.response.status, 'REGISTER_FAIL')
-      );
-      dispatch({
-        type: REGISTER_FAIL
+    // Request body
+    const body = {
+      userName,
+      password,
+      email,
+      name,
+      country,
+      image
+    };
+    body.userName = userName;
+    body.password = password;
+    body.email=email;
+    body.name = name;
+    body.country = country;
+    body.image=image;
+    axios
+      .post('http://localhost:5000/usuarios', body, config)
+      .then(res =>
+        dispatch({
+          type: REGISTER_SUCCESS,
+          payload: res.data
+        })
+      )
+      .catch(err => {
+        dispatch(
+          returnErrors(err.response.data, err.response.status, 'REGISTER_FAIL')
+        );
+        dispatch({
+          type: REGISTER_FAIL
+        });
       });
-    });
-};
+  };
 
 // Login User
-export const login = ({ email, password }) => dispatch => {
+export const login = ({ userName, password }) => dispatch => {
   // Headers
   const config = {
     headers: {
@@ -73,10 +90,16 @@ export const login = ({ email, password }) => dispatch => {
   };
 
   // Request body
-  const body = JSON.stringify({ email, password });
+  //const body = JSON.stringify({ userName, password });
+  const usuario = {
+    userName,
+    password
+  };
+  usuario.userName = userName;
+  usuario.password = password;
 
   axios
-    .post('/auth', body, config)
+    .post('http://localhost:5000/login', usuario, config)
     .then(res =>
       dispatch({
         type: LOGIN_SUCCESS,
@@ -91,9 +114,9 @@ export const login = ({ email, password }) => dispatch => {
         type: LOGIN_FAIL
       });
     });
+
 };
 
-// Logout User
 export const logout = () => {
   return {
     type: LOGOUT_SUCCESS
@@ -104,7 +127,6 @@ export const logout = () => {
 export const tokenConfig = getState => {
   // Get token from localstorage
   const token = getState().auth.token;
-
   // Headers
   const config = {
     headers: {

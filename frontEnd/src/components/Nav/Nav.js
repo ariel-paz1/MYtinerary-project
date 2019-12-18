@@ -3,13 +3,22 @@ import './nav-style.css';
 import {
   Link
 } from "react-router-dom";
-//una prueba 2
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { logout } from '../../actions/authActions';
 
 class SideNavPage extends React.Component {
-  state = {
-    state: {
-      showNav: false
-    }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      state: {
+        showNav: false
+      },
+      modal: false,
+      userName: "",
+      password: ""
+    };
   }
 
   openNavClick = e => {
@@ -43,6 +52,42 @@ class SideNavPage extends React.Component {
     }
   }
 
+
+  static propTypes = {
+    isAuthenticated: PropTypes.bool,
+    error: PropTypes.object.isRequired,
+    logout: PropTypes.func.isRequired
+    
+  };
+
+  componentDidUpdate(prevProps) {
+    const { error, isAuthenticated } = this.props;
+    if (error !== prevProps.error) {
+      // Check for register error
+      if (error.id === 'LOGIN_FAIL') {
+        this.setState({ msg: error.msg.msg });
+      } else {
+        this.setState({ msg: null });
+      }
+    }
+
+    // If authenticated, close modal
+    if (this.state.modal) {
+      if (isAuthenticated) {
+        this.toggle();
+      }
+    }
+  }
+
+  toggle = () => {
+    // Clear errors
+    this.props.clearErrors();
+    this.setState({
+      modal: !this.state.modal
+    });
+  };
+
+
   render() {
     const { showNav } = this.state
     let navCoverStyle = { width: showNav ? "100%" : "0" }
@@ -65,19 +110,32 @@ class SideNavPage extends React.Component {
           <a href="/#" onClick={this.closeNavClick} className="close-nav">
             &times;
           </a>
-          
-            <div>
-              <Link to="/" onClick={this.closeNav} >Home</Link>
+
+          <div>
+            <Link to="/" onClick={this.closeNav} >Home</Link>
+            {this.props.isAuthenticated ? (
+              <a href="/" onClick={this.props.logout}>Logout</a>
+            ) : (
+              <div>
               <Link to="/Create" onClick={this.closeNav}>Create</Link>
               <Link to="/Login" onClick={this.closeNav}>Login</Link>
-              <Link to="/Itinerary" onClick={this.closeNav}>It</Link>
-              <hr />
             </div>
-          
+            )} 
+            <hr />
+          </div>
+
         </div>
       </React.Fragment>
     )
   }
 }
 
-export default SideNavPage;
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.error
+});
+
+export default connect(
+  mapStateToProps,
+  { logout }
+)(SideNavPage);
