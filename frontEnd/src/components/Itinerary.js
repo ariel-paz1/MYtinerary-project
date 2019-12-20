@@ -18,6 +18,8 @@ class Itinerario extends React.Component {
   componentDidMount() {
     const name = this.props.match.params.id;
     this.props.getItinerary(name);
+
+    //this.setState({ favorite: joined });
   }
 
   onDeleteClick = id => {

@@ -224,7 +224,8 @@ app.post("/usuarios", (req, res) => {
                   user: {
                     id: user.id,
                     userName: user.userName,
-                    email: user.email
+                    email: user.email,
+                    favorites: user.favorites
                   }
                 });
               }
@@ -277,7 +278,8 @@ app.post("/login", (req, res) => {
             user: {
               id: user.id,
               userName: user.userName,
-              email: user.email
+              email: user.email,
+              favorites: user.favorites
             }
           });
         }
