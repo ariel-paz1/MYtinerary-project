@@ -11,15 +11,18 @@ class Itinerario extends React.Component {
     this.state = {
       itinerarioData: [],
       favorite: [],
-      act: false
+      act: false,
     };
   }
 
   componentDidMount() {
     const name = this.props.match.params.id;
     this.props.getItinerary(name);
-
-    //this.setState({ favorite: joined });
+    //this.setState({ favorite: this.props.user.favorites });
+    console.log(this.props.user);
+    if(this.props.user){
+      this.setState({ favorite: this.props.user.favorites });
+    }
   }
 
   onDeleteClick = id => {
@@ -33,63 +36,60 @@ class Itinerario extends React.Component {
   };
 
   manageFavorites = iti => {
+    console.log(iti);
     var joined = this.state.favorite.concat(iti);
     let newArray = this.state.favorite;
     if (newArray.includes(iti)) {
-      let filteredArray = this.state.favorite.filter(item => item !== iti)
+      let filteredArray = this.state.favorite.filter(item => item !== iti);
       console.log("filteredArray");
       console.log(filteredArray);
       this.setState({ favorite: filteredArray });
-    }
-    else this.setState({ favorite: joined });
-  }
+    } else this.setState({ favorite: joined });
+  };
 
-  addFavorites = (id) => {
-    //e.preventDefault();
+  addFavorites = () => {
     const favorites = this.state.favorite;
-    //console.log(favorites);
-    axios.put(`http://localhost:5000/usuarios/${id}`, favorites).then(res => {
-      console.log("res");
-      console.log(res);
-    }).catch(err => {
-      console.log("err");
-      console.log(err);
-    });
-  }
+
+    axios
+      .put(`http://localhost:5000/usuarios/${this.props.user.id}`, favorites)
+      .then(res => {
+        console.log("res");
+        console.log(res);
+      })
+      .catch(err => {
+        console.log("err");
+        console.log(err);
+      });
+  };
 
   isFavorite = iti => {
     let newArray = this.state.favorite;
     if (newArray.includes(iti)) {
-      return true
-    }
-    else return false
-  }
+      return true;
+    } else return false;
+  };
 
   render() {
     if (this.props.itinerario.itinerarioData) {
       const dat = this.props.itinerario.itinerarioData;
-      //const { itinerario } = this.props.itinerario;
-      console.log(this);
       return (
         <React.Fragment>
           <div>
             {this.props.itinerario.itinerarioData[0] ? (
               <h1>{this.props.itinerario.itinerarioData[0].citi_id.name} </h1>
-            ) : (
-                null
-              )}
-            {this.props.isAuthenticated ? (
-              null
-            ) : (
-                <h4 className="mb-3 ml-4">Please log in to manage Itineraries</h4>
-              )}
+            ) : null}
+            {this.props.isAuthenticated ? null : (
+              <h4 className="mb-3 ml-4">Please log in to manage Itineraries</h4>
+            )}
             {dat.map(dat => (
               <div className="card mb-3 " key={dat._id}>
-                <div className="mb-3" >
+                <div className="mb-3">
                   <div className="row no-gutters">
                     <div className="col-md-4">
                       <img
-                        src={process.env.PUBLIC_URL + "/img/itin/" + dat.profilePic}
+                        src={
+                          process.env.PUBLIC_URL + "/img/itin/" + dat.profilePic
+                        }
                         className="imgCard"
                         alt="..."
                       />
@@ -101,38 +101,46 @@ class Itinerario extends React.Component {
                         <h6 className="card-title">
                           Rating: {dat.rating} Price: {dat.price}
                         </h6>
-                        <p className="card-text" onClick={this.toggle}>
-                          <small className="text-muted">See more</small>
-                        </p>
+                        <h6 className="card-title">
+                        Hashtag: {dat.hashtag.map((ht) =>" #" + ht)}
+                        </h6>
+                        {!this.state.act ? (
+                          <p className="card-text" onClick={this.toggle}>
+                            <small className="text-muted">See more</small>
+                          </p>
+                        ) : (
+                          <p className="card-text" onClick={this.toggle}>
+                            <small className="text-muted">Show off</small>
+                          </p>
+                        )}
                         {this.props.isAuthenticated ? (
                           <Button
                             color={this.isFavorite(dat.title) ? "green" : "red"}
                             onClick={() => this.manageFavorites(dat.title)}
                           >
                             Favorite
-                      </Button>
+                          </Button>
                         ) : null}
                       </div>
                     </div>
                   </div>
-
                 </div>
-                {(this.state.act) ? (
-                  <React.Fragment>
-                    <Activity />
-                  </React.Fragment>
-                ) :
-                  null
-                }
+                {this.state.act ? (
+                  <div>
+                    <h3 className="Act-It">Activities</h3>
+                    <React.Fragment>
+                      <Activity />
+                    </React.Fragment>
+                  </div>
+                ) : null}
               </div>
             ))}
 
             {this.props.isAuthenticated ? (
-              <Button
-                onClick={this.addFavorites(this.props.user.id)}
-              >
-                Actualizar Usuario
-                      </Button>
+              
+              <Button onClick={this.addFavorites.bind()}>
+                Actualizar Nuevos Favoritos
+              </Button>
             ) : null}
           </div>
         </React.Fragment>

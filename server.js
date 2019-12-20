@@ -74,7 +74,6 @@ app.get("/city/all", async (req, res) => {
     cities
       .find({})
       .then(data => {
-        console.log(data);
         res.json(data);
       })
       .catch(err => {
@@ -240,6 +239,7 @@ app.post("/usuarios", (req, res) => {
 /** Actualizo favs */
 
 app.put('/usuarios/:id', function (req, res) {
+  //console.log(req);
   user.findByIdAndUpdate(req.params.id,
     {
       favorites : req.body
@@ -248,8 +248,8 @@ app.put('/usuarios/:id', function (req, res) {
       if (err) {
         res.send(err);
       } else {
-        console.log(response);
         console.log('user updated!');
+        res.send("Ok")
       }
     });
 });
