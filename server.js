@@ -239,7 +239,6 @@ app.post("/usuarios", (req, res) => {
 /** Actualizo favs */
 
 app.put('/usuarios/:id', function (req, res) {
-  //console.log(req);
   user.findByIdAndUpdate(req.params.id,
     {
       favorites : req.body

@@ -18,9 +18,8 @@ class Itinerario extends React.Component {
   componentDidMount() {
     const name = this.props.match.params.id;
     this.props.getItinerary(name);
-    //this.setState({ favorite: this.props.user.favorites });
     console.log(this.props.user);
-    if(this.props.user){
+    if (this.props.user) {
       this.setState({ favorite: this.props.user.favorites });
     }
   }
@@ -45,11 +44,21 @@ class Itinerario extends React.Component {
       console.log(filteredArray);
       this.setState({ favorite: filteredArray });
     } else this.setState({ favorite: joined });
+    setTimeout(
+      function () {
+        this.addFavorites();
+      }
+        .bind(this),
+      1000
+    );
+
+
   };
 
   addFavorites = () => {
     const favorites = this.state.favorite;
-
+    console.log("favs");
+    console.log(favorites);
     axios
       .put(`http://localhost:5000/usuarios/${this.props.user.id}`, favorites)
       .then(res => {
@@ -102,17 +111,17 @@ class Itinerario extends React.Component {
                           Rating: {dat.rating} Price: {dat.price}
                         </h6>
                         <h6 className="card-title">
-                        Hashtag: {dat.hashtag.map((ht) =>" #" + ht)}
+                          Hashtag: {dat.hashtag.map((ht) => " #" + ht)}
                         </h6>
                         {!this.state.act ? (
                           <p className="card-text" onClick={this.toggle}>
                             <small className="text-muted">See more</small>
                           </p>
                         ) : (
-                          <p className="card-text" onClick={this.toggle}>
-                            <small className="text-muted">Show off</small>
-                          </p>
-                        )}
+                            <p className="card-text" onClick={this.toggle}>
+                              <small className="text-muted">Show off</small>
+                            </p>
+                          )}
                         {this.props.isAuthenticated ? (
                           <Button
                             color={this.isFavorite(dat.title) ? "green" : "red"}
@@ -135,13 +144,6 @@ class Itinerario extends React.Component {
                 ) : null}
               </div>
             ))}
-
-            {this.props.isAuthenticated ? (
-              
-              <Button onClick={this.addFavorites.bind()}>
-                Actualizar Nuevos Favoritos
-              </Button>
-            ) : null}
           </div>
         </React.Fragment>
       );
