@@ -24,15 +24,21 @@ app.use(passport.initialize());
 require("./passport/passport")
 
 //MongoClient.connect('mongodb+srv://userDesa:userDesa123@mlabcluster-wfri4.mongodb.net/ProjectMern?retryWrites=true&w=majority', { useUnifiedTopology: true }, (err, db) => {
+
 const db = config.get("mongoURI");
-mongoose.connect(
-  db,
-  { useUnifiedTopology: true, useNewUrlParser: true },
-  (err, db) => {
-    if (err) return console.log(err);
+async function connectDB() {
+  try {
+    await mongoose.connect(db, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true
+    });
     console.log("conectado a la DB");
+  } catch (err) {
+    console.log(err);
+    process.exit(1);
   }
-);
+}
+connectDB();
 
 app.listen(port, () => {
   console.log("Conectado a " + port);
